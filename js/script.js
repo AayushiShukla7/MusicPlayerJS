@@ -158,7 +158,7 @@ function playMusic(){
   const dataArray = new Uint8Array(bufferLength);
 
   //Start drawing
-  let barWidth = 15;
+  const barWidth = 15;
   let barHeight;
   let x;
 
@@ -177,6 +177,9 @@ function playMusic(){
 function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray) {
    switch(choice) {
       case '1': //Animation #1: Waves back-to-back
+      barWidth = 30;
+      analyzer.fftSize = 256;
+
       //Creates 32 soundbars
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 2;
