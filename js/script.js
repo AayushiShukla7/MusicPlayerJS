@@ -33,7 +33,6 @@ let analyzer;
 
 const rndInt = randomNumber(12);
 let styleChoice = rndInt.toString();
-let barWidthValue = 15;
 let analyzerFFTValue = 128;  
 
 //#endregion Animations - SETUP
@@ -151,7 +150,7 @@ function playMusic(){
 
   //Analyzer bars drawn on canvas (default is 2048)
   //Analyser fftSize Values: 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768
-  analyzer.fftSize = analyzerFFTValue; 
+  analyzer.fftSize = 128; 
 
   //ReadOnly (half of fftSize)
   const bufferLength = analyzer.frequencyBinCount;    
@@ -159,7 +158,7 @@ function playMusic(){
   const dataArray = new Uint8Array(bufferLength);
 
   //Start drawing
-  let barWidth = barWidthValue;
+  let barWidth = 15;
   let barHeight;
   let x;
 
@@ -211,6 +210,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
       
       case '2': //Animation #2: Circle
+      analyzer.fftSize = 128;
+
       //Draws second set of bars beside the first one
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.5;
@@ -237,6 +238,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '3': //Animation #3: Leaf effect with arc
+      analyzer.fftSize = 1024;
+
       //Draws a leaf effect by adjusting rotations and arc
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.5;
@@ -268,6 +271,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '4': //Animation #4: Origami Fan
+      analyzer.fftSize = 64;
+
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.4;
 
@@ -292,6 +297,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '5': //Animation #5: Spirals and circles (Bubbles)
+      analyzer.fftSize = 256;
+
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.4;
 
@@ -338,6 +345,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '6': //Animation #6: Images/sprite sheets with drawImage method
+      analyzer.fftSize = 128;
+
       let randomImageNumber = randomNumber(5).toString();
       const sprite = new Image();
       sprite.src = './images/Image' + randomImageNumber + '.jfif'; 
@@ -367,6 +376,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '7': //Animation #7: Neon bars with globalCompositeOperation
+      analyzer.fftSize = 128;
+
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.2;
 
@@ -412,6 +423,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '8': //Animation #8: Layer Interactions (Psychedellic Blue)
+      analyzer.fftSize = 16384;
+
       //Creates 32 soundbars
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.1;
@@ -446,10 +459,13 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       }
       
       //IMPORTANT - To restore the canvas after rotation
+      ctx.globalCompositeOperation = '';
       ctx.restore();
       break;
 
       case '9': //Animation #9: Liquid Filter Effect
+      analyzer.fftSize = 256;
+
       ctx.fillStyle = 'yellow'; //fetchRandomColor();   
       canvas.style.background = 'black';
       canvas.style.filter = 'blur(10px) contrast(20)';
@@ -483,6 +499,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '10': //Animation #10: Text effects on canvas with fillText
+      analyzer.fftSize = 64;
+
       ctx.fillStyle = 'hotpink';
       ctx.shadowOffsetX = 5;
       ctx.shadowOffsetY = 5;
@@ -507,14 +525,16 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       const fontSize = dataArray[15] * 3;
       ctx.font = fontSize + 'px Helvetica';
       const halfSize = fontSize/2;
-      ctx.fillText('A', canvas.width/2 - halfSize/2, canvas.height/2 + halfSize/2);
-      ctx.strokeText('A', canvas.width/2 - halfSize/2, canvas.height/2 + halfSize/2);
+      ctx.fillText('A', canvas.width/2 - halfSize/1.5, canvas.height/2 + halfSize/1.5);
+      ctx.strokeText('A', canvas.width/2 - halfSize/1.5, canvas.height/2 + halfSize/1.5);
 
       //IMPORTANT - To restore the canvas after rotation
       ctx.restore();
       break;
       
       case '11': //Animation #11: Outward Spiral
+      analyzer.fftSize = 128;
+
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.2;
           ctx.save();
@@ -532,6 +552,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '12': //Animation #12: Conditional Rectangles (Pencil Shavings)
+      analyzer.fftSize = 256;
+
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 0.8;
           ctx.save();
