@@ -261,16 +261,14 @@ ul li.playing{
 @media only screen and (max-width:900px) {
   /* For tablets: */
    .wrapper{
-    min-width: 75vh;
-    overflow: hidden;
-    position: relative;
+    min-width: 450px;
+    max-width: 450px;
   }
 }
 @media only screen and (max-width:500px) {
   /* For mobile phones: */
   .wrapper{
-    min-width: 70vh;
-    overflow: hidden;
-    position: relative;
+    min-width: 350px;
+    max-width: 350px;
   }
 }
