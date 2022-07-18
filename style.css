@@ -47,7 +47,8 @@ body{
   cursor: pointer;
 }
 .top-bar, .progress-area .song-timer, 
-.controls, .music-list .header, .music-list ul li{
+.controls, .music-list .header, .music-list ul li,
+#player{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -136,10 +137,10 @@ body{
   font-size: 13px;
   color: var(--lightblack);
 }
-.controls{
+.controls, #player{
   margin: 40px 0 5px 0;
 }
-.controls i{
+.controls, #player i{
   font-size: 28px;
   user-select: none;
   background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
@@ -147,8 +148,8 @@ body{
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.controls i:nth-child(2),
-.controls i:nth-child(4){
+.controls, #player i:nth-child(2),
+.controls, #player i:nth-child(4){
   font-size: 43px;
 }
 .controls #prev{
@@ -257,6 +258,98 @@ ul li.playing{
   color: var(--violet);
 }
 
+/* #region Volume Control Slider */
+/* #player {
+	height: 54px;
+  width: 54px;
+  display: flex;
+  position: relative;
+	margin: 10px;
+  padding: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+#player i {
+  position: absolute;
+  margin-top: -6px;
+  border-radius: 50%;
+  color: linear-gradient(var(--white) 0%, var(--darkwhite) 100%);
+  box-shadow: 0px 0px 5px var(--pink);
+}
+#player i#volume-down {
+  margin-left: 10%;
+}
+#player i#volume-up {
+  margin-right: -400px;
+  right: 0;
+}
+
+#volume {
+  height: 5px;
+	min-width: 300px;
+  display: flex;
+  position: relative;
+	margin: 0;
+  padding: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+	background: #f0f0f0;
+	border-radius: 15px;
+} 
+#volume .volume-progressbar {
+  position: absolute;
+  top: 16px;
+  left: 220px;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
+}
+#volume .volume-slider {
+  position: relative;
+  top: 1px;
+  width: 100%;
+  border-radius: 5px;
+  background: var(--intellectualgrey);
+  cursor: pointer;
+  -webkit-appearance: none; 
+} 
+
+#volume .volume-slider::-webkit-slider-runnable-track {
+  width: 75px;
+  height: 20px;
+  border: none;
+}
+
+#volume .volume-slider:hover::-webkit-slider-thumb, :active::-webkit-slider-thumb {
+  display: block;
+}
+
+#volume .volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -3px;
+  border: none;
+  border-radius: 50%;
+  background: #AAA;
+  color: linear-gradient(var(--pink) 0%, var(--violet) 100%);
+  display: none;
+}
+
+#volume .volume-slider:focus {
+  outline: none;
+}
+
+#volume .volume-slider:active::-webkit-slider-thumb {
+  background: var(--intellectualgrey);
+} */
+
+/* #endregion */
+
 /* Responsive Design */
 @media only screen and (max-width:900px) {
   /* For tablets: */
@@ -272,3 +365,4 @@ ul li.playing{
     max-width: 350px;
   }
 }
+

@@ -10,7 +10,8 @@ progressArea = wrapper.querySelector(".progress-area"),
 progressBar = progressArea.querySelector(".progress-bar"),
 musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
-closemoreMusic = musicList.querySelector("#close");
+closemoreMusic = musicList.querySelector("#close"),
+volumeSlider = wrapper.querySelector("#volume");
 //customSelect = wrapper.querySelector(".top-bar #show-animation-list");
 
 let isPaused = true;
@@ -33,7 +34,8 @@ let analyzer;
 
 const rndInt = randomNumber(12);
 let styleChoice = rndInt.toString();
-let analyzerFFTValue = 128;  
+let analyzerFFTValue = 128; 
+let myVolume = 0.5; 
 
 //#endregion Animations - SETUP
 
@@ -80,6 +82,64 @@ window.addEventListener("load", ()=>{
   loadMusic(musicIndex);
   playingSong(); 
 });
+
+//volume slider
+// volumeSlider.slider({
+//   min: 0,
+//   max: 100,
+//   value: 0,
+//   range: "min",
+//   slide: function(event, ui) {
+//     setVolume(ui.value / 100);
+//   }
+// });
+
+//volumn control
+function setVolume(myVolume) {
+  mainAudio.volume = myVolume;
+}
+
+// wrapper.getElementById('#np-volume').on('input propertychange', function() {
+//   var val = (this.val() - this.attr('min')) / (this.attr('max') - this.attr('min'));
+
+//   wrapper.getElementById('#volume-progressbar').css('background',
+//     '-webkit-gradient(linear, left top, right top, '
+//     + 'color-stop(' + 0 + ', #D57D67), '
+//     + 'color-stop(' + val + ', #EDB472), '
+//     + 'color-stop(' + val + ', #CCC)'
+//     + ')'
+//   );
+// });
+
+//volume up/down with arrow keys function
+document.onkeydown = function(event) {
+  switch (parseInt(event.key)) {
+     case 38:
+          event.preventDefault();
+          audio_vol = mainAudio.volume;
+          if (audio_vol!=1) {
+            try {
+                mainAudio.volume = audio_vol + 0.02;
+            }
+            catch(err) {
+                mainAudio.volume = 1;
+            }              
+          }            
+        break;
+     case 40:
+          event.preventDefault();
+          audio_vol = mainAudio.volume;
+          if (audio_vol!=0) {
+            try {
+                mainAudio.volume = audio_vol - 0.02;
+            }
+            catch(err) {
+                mainAudio.volume = 0;
+            }              
+          }            
+        break;
+  }
+};
 
 //random number calculation function
 function randomNumber(maxVal) {
@@ -140,6 +200,7 @@ function playMusic(){
   wrapper.classList.add("paused");
   playPauseBtn.querySelector("i").innerText = "pause";
   const audioContext = new window.AudioContext(); 
+  setVolume(myVolume);
   mainAudio.play();
 
   //Animations
@@ -822,3 +883,6 @@ function clicked(element){
   playMusic();
   playingSong();
 }
+
+
+

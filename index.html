@@ -10,6 +10,7 @@
 </head>
 <body>
   <div class="wrapper">
+    
     <div class="top-bar">
       <i class="material-icons">expand_more</i>
       <!-- <span>Now Playing</span> -->
@@ -30,22 +31,27 @@
         <option value="12">Colorful Pencil Shavings</option>
       </select>
     </div>
+
     <div class="img-area">
       <canvas id="audio-canvas"></canvas>
     </div>
+
     <div class="song-details">
       <p class="name"></p>
       <p class="artist"></p>
     </div>
+
     <div class="progress-area">
       <div class="progress-bar">
         <audio id="main-audio" src=""></audio>
       </div>
+
       <div class="song-timer">
         <span class="current-time">0:00</span>
         <span class="max-duration">0:00</span>
       </div>
     </div>
+
     <div class="controls">
       <i id="repeat-plist" class="material-icons" title="Playlist looped">repeat</i>
       <i id="prev" class="material-icons">skip_previous</i>
@@ -55,6 +61,16 @@
       <i id="next" class="material-icons">skip_next</i>
       <i id="more-music" class="material-icons">queue_music</i>
     </div>
+
+    <div id="player">
+      <i id="volume-down" class="material-icons">volume_down</i>
+      <div id="volume">
+        <span id="volume-progressbar" class="volume-progressbar"></span>
+        <input type="range" min="0" max="100" step="1" value="100" id="np-volume" class="volume-slider" role="progressbar">
+      </div>
+      <i id="volume-up" class="material-icons">volume_up</i>
+    </div>
+
     <div class="music-list">
       <div class="header">
         <div class="row">
@@ -63,6 +79,7 @@
         </div>
         <i id="close" class="material-icons">close</i>
       </div>
+
       <ul>
         <!-- here li list are coming from js -->
       </ul>
