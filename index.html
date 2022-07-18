@@ -13,7 +13,22 @@
     <div class="top-bar">
       <i class="material-icons">expand_more</i>
       <span>Now Playing</span>
-      <i id="show-animation-list" class="material-icons">more_horiz</i>
+      <!-- <i id="show-animation-list" class="material-icons">more_horiz</i> -->
+      <select id="animation-dropdown" class="dropdown-content" onchange="setAnimationStyle(this.value)">
+        <option value="0">Select Animation</option>
+        <option value="1">Sound Bars</option>
+        <option value="2">Circle with Bars</option>
+        <option value="3">Leaf with Arc</option>
+        <option value="4">Origami Fan</option>
+        <option value="5">Bubbles</option>
+        <option value="6">Spiraling Images</option>
+        <option value="7">Neon Bars</option>
+        <option value="8">Psychedellic Blue</option>
+        <option value="9">Groovy Liquid</option>
+        <option value="10">Alphabet Soup</option>
+        <option value="11">Outward Spiral</option>
+        <option value="12">Colorful Pencil Shavings</option>
+      </select>
     </div>
     <div class="img-area">
       <canvas id="audio-canvas"></canvas>

@@ -10,8 +10,8 @@ progressArea = wrapper.querySelector(".progress-area"),
 progressBar = progressArea.querySelector(".progress-bar"),
 musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
-closemoreMusic = musicList.querySelector("#close"),
-customSelect = wrapper.querySelector(".top-bar #show-animation-list");
+closemoreMusic = musicList.querySelector("#close");
+//customSelect = wrapper.querySelector(".top-bar #show-animation-list");
 
 //#region Animations - SETUP
 
@@ -35,11 +35,35 @@ let styleChoice = rndInt.toString();
 
 //#region Custom dropdown - SETUP
 
-// const setAnimationStyle = (val) =>{
-//   if(val > 0) {
-//       styleChoice = val;
-//   }
-// };
+// customSelect.addEventListener('click', function() {
+//   myFunction();
+// });
+
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("animation-dropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+const setAnimationStyle = (val) =>{
+  if(val > 0) {
+      styleChoice = val;
+  }
+};
 
 //#endregion Custom dropdown- SETUP
 
@@ -58,11 +82,15 @@ function randomNumber() {
 
 //canvas fullscreen on double-click event
 canvas.addEventListener('dblclick', function(){ 
-  //canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-  //canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-
-  canvas.width = 1920;
-  canvas.height = 1080;
+  if(canvas.requestFullscreen) {
+    canvas.requestFullscreen();
+  }
+  else if (canvas.webkitRequestFullscreen) { /* Safari */
+    canvas.webkitRequestFullscreen();
+  } 
+  else if (canvas.msRequestFullscreen) { /* IE11 */
+    canvas.msRequestFullscreen();
+  }
 });
 
 function loadMusic(indexNumb){
@@ -279,7 +307,7 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
 
       case '6': //Animation #6: Images/sprite sheets with drawImage method
       const sprite = new Image();
-      sprite.src = './assets/images/Image2.jfif'; 
+      sprite.src = './images/Image1.jfif'; 
 
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.5;           
