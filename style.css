@@ -256,3 +256,21 @@ ul li.playing{
   pointer-events: none;
   color: var(--violet);
 }
+
+/* Responsive Design */
+@media only screen and (max-width:900px) {
+  /* For tablets: */
+   .wrapper{
+    min-width: 75vh;
+    overflow: hidden;
+    position: relative;
+  }
+}
+@media only screen and (max-width:500px) {
+  /* For mobile phones: */
+  .wrapper{
+    min-width: 70vh;
+    overflow: hidden;
+    position: relative;
+  }
+}
