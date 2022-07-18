@@ -20,6 +20,10 @@
   --black: #000000;
   --lightblue: #496E92;
   --darkblackblue: #191C22;
+  --darkgold: #8E793E;
+  --lightgold: #AD974F;
+  --intellectualgrey: #231F20;
+  --lightgrey: #EAEAEA;
 }
 body{
   display: flex;

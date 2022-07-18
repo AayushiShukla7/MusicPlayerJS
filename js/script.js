@@ -13,6 +13,9 @@ moreMusicBtn = wrapper.querySelector("#more-music"),
 closemoreMusic = musicList.querySelector("#close");
 //customSelect = wrapper.querySelector(".top-bar #show-animation-list");
 
+let isPaused = true;
+let isPlaying = false;
+
 //#region Animations - SETUP
 
 //Set canvas width and height
@@ -28,8 +31,10 @@ ctx.lineCap = 'round';
 let audioSource;
 let analyzer;
 
-const rndInt = randomNumber();
-let styleChoice = rndInt.toString();  
+const rndInt = randomNumber(12);
+let styleChoice = rndInt.toString();
+let barWidthValue = 15;
+let analyzerFFTValue = 128;  
 
 //#endregion Animations - SETUP
 
@@ -61,7 +66,9 @@ window.onclick = function(event) {
 
 const setAnimationStyle = (val) =>{
   if(val > 0) {
+      pauseMusic();
       styleChoice = val;
+      playMusic();
   }
 };
 
@@ -76,9 +83,29 @@ window.addEventListener("load", ()=>{
 });
 
 //random number calculation function
-function randomNumber() {
-  return Math.floor(Math.random() * 12) + 1;
+function randomNumber(maxVal) {
+  return Math.floor(Math.random() * maxVal) + 1;
 }
+
+//random color function
+function fetchRandomColor() {
+  let maxVal = 0xFFFFFF; // 16777215
+  let randomNumber = Math.random() * maxVal; 
+  randomNumber = Math.floor(randomNumber);
+  randomNumber = randomNumber.toString(16);
+  let randColor = randomNumber.padStart(6, 0);   
+  return `#${randColor.toUpperCase()}`
+}
+
+//Music pause/play toggle on canvas click event
+canvas.addEventListener('click', function(){ 
+  if(isPaused && !isPlaying) {
+    playMusic();
+  }
+  else {
+    pauseMusic();
+  }
+});
 
 //canvas fullscreen on double-click event
 canvas.addEventListener('dblclick', function(){ 
@@ -96,12 +123,21 @@ canvas.addEventListener('dblclick', function(){
 function loadMusic(indexNumb){
   musicName.innerText = allMusic[indexNumb - 1].name;
   musicArtist.innerText = allMusic[indexNumb - 1].artist;
-  styleChoice = randomNumber().toString();
+  styleChoice = randomNumber(12).toString();
   mainAudio.src = `songs/${allMusic[indexNumb - 1].src}.mp3`;
+}
+
+//Set Bar Width and Analyzer FFT for visualizer
+function setBarWidthAndFFT(barWidth, fft) {
+  barWidthValue = barWidth;
+  analyzerFFTValue = fft;
 }
 
 //play music function
 function playMusic(){
+  isPlaying = true;
+  isPaused = false;
+
   wrapper.classList.add("paused");
   playPauseBtn.querySelector("i").innerText = "pause";
   const audioContext = new window.AudioContext(); 
@@ -112,13 +148,18 @@ function playMusic(){
   analyzer = audioContext.createAnalyser();
   audioSource.connect(analyzer);
   analyzer.connect(audioContext.destination);
+
+  //Analyzer bars drawn on canvas (default is 2048)
   //Analyser fftSize Values: 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768
-  analyzer.fftSize = 128;  //Analyzer bars drawn on canvas (default is 2048)
-  const bufferLength = analyzer.frequencyBinCount;    //ReadOnly (half of fftSize)
+  analyzer.fftSize = analyzerFFTValue; 
+
+  //ReadOnly (half of fftSize)
+  const bufferLength = analyzer.frequencyBinCount;    
+  
   const dataArray = new Uint8Array(bufferLength);
 
   //Start drawing
-  const barWidth = 15;  //(canvas.width/2)/bufferLength;
+  let barWidth = barWidthValue;
   let barHeight;
   let x;
 
@@ -135,8 +176,7 @@ function playMusic(){
 
 //music visualizer function
 function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray) {
-  //TODO: Create global variables. Use local copies for animation to fix leakage issues with animation selection.
-  switch(choice) {
+   switch(choice) {
       case '1': //Animation #1: Waves back-to-back
       //Creates 32 soundbars
       for(let i = 0; i< bufferLength; i++) {
@@ -147,8 +187,6 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           const green = i * 4;
           const blue = barHeight/2;
 
-          ctx.fillStyle = 'white';
-          ctx.fillRect(canvas.width - x, canvas.height - barHeight - 30, barWidth, 20);
           ctx.fillStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
           ctx.fillRect(canvas.width - x, canvas.height - barHeight, barWidth, barHeight);
           x += barWidth;
@@ -163,15 +201,13 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           const green = i * 4;
           const blue = barHeight/2;
 
-          ctx.fillStyle = 'white';
-          ctx.fillRect(x, canvas.height - barHeight - 30, barWidth, 15);
           ctx.fillStyle = 'rgb(' + red + ',' + green + ',' + blue + ')';
           ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
           x += barWidth;
-
-          //IMPORTANT - To restore the canvas after rotation
-          ctx.restore();
       }
+
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
       
       case '2': //Animation #2: Circle
@@ -195,6 +231,9 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           //IMPORTANT - To restore the canvas after rotation
           ctx.restore();
       }
+
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
 
       case '3': //Animation #3: Leaf effect with arc
@@ -237,9 +276,8 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           ctx.translate(canvas.width/2, canvas.height/2); //Sets rotate center point for rotation
           ctx.rotate(i * bufferLength * 4);   //Increase or decrease value to change rotation of canvas
 
-          //Dynamically change colors based on the frequency
+          //Dynamically change colors based on the frequency - Angle from Red(0)
           const hue = i * 0.3;    //250 + i * 2;  
-          //Angle from Red(0)
 
           //ctx.fillStyle = 'hsl(' + hue + ',100%, 50%)';
           //Dynamic lighting
@@ -253,7 +291,7 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       }
       break;
 
-      case '5': //Animation #5: Spirals and circles
+      case '5': //Animation #5: Spirals and circles (Bubbles)
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.4;
 
@@ -281,20 +319,14 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           //Draw circle #1
           ctx.beginPath();
           ctx.arc(0, barHeight, barHeight/10, 0, Math.PI * 2);
-          //ctx.fill();
 
           //Draw circle #2
-          //ctx.beginPath();
           ctx.arc(0, barHeight/1.5, barHeight/20, 0, Math.PI * 2);
-          //ctx.fill();
 
           //Draw circle #3
-          //ctx.beginPath();
           ctx.arc(0, barHeight/2, barHeight/30, 0, Math.PI * 2);
-          //ctx.fill();
 
           //Draw circle #4
-          //ctx.beginPath();
           ctx.arc(0, barHeight/3, barHeight/40, 0, Math.PI * 2);
           ctx.fill();
 
@@ -306,8 +338,9 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       break;
 
       case '6': //Animation #6: Images/sprite sheets with drawImage method
+      let randomImageNumber = randomNumber(5).toString();
       const sprite = new Image();
-      sprite.src = './images/Image1.jfif'; 
+      sprite.src = './images/Image' + randomImageNumber + '.jfif'; 
 
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.5;           
@@ -323,13 +356,14 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
 
           ctx.drawImage(sprite, 0, barHeight, barHeight/2.5, barHeight/2.5);
           x += barWidth;
-
-          //IMPORTANT - To restore the canvas after rotation
           ctx.restore();
       }
 
       let size = dataArray[15] * 1.5 > 100 ? dataArray[15] : 100;
       ctx.drawImage(sprite, canvas.width - size/2, canvas.height - size/2, size, size);
+
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
 
       case '7': //Animation #7: Neon bars with globalCompositeOperation
@@ -339,18 +373,22 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           ctx.shadowOffsetX = 0;  //2;
           ctx.shadowOffsetY = 0;  //5;
           ctx.shadowBlur = 20;
-          ctx.shadowColor = 'gold';   //'white';
+          ctx.shadowColor = 'white';
 
-          ctx.globalCompositeOperation = 'xor';   //Glowing neon edges only
+          ctx.globalCompositeOperation = 'source-over';   //Glowing neon edges only
 
           //Draw a circle animation
           ctx.save();
-          ctx.translate(canvas.width/2, canvas.height/2); //Sets rotate center point for rotation
-          ctx.rotate(i * bufferLength / 1.2);   //Increase or decrease value to change rotation of canvas
+
+          //Sets rotate center point for rotation
+          ctx.translate(canvas.width/2, canvas.height/2); 
+
+          //Increase or decrease value to change rotation of canvas
+          ctx.rotate(i * bufferLength / 1.2);   
           ctx.lineWidth = barHeight/7;
 
-          //Dynamically change colors based on the frequency
-          const hue = 200 + i * 5;    //Angle from Red(0)
+          //Dynamically change colors based on the frequency - Angle from Red(0)
+          const hue = 200 + i * 5;    
 
           //Static lighting
           ctx.strokeStyle = 'hsl(' + hue + ',100%, 50%)';
@@ -363,14 +401,17 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           ctx.lineTo(barHeight/1.1, barHeight);
           ctx.stroke();
           //ctx.fillRect(0, 0, barWidth, barHeight);
-          x += barWidth;
-
-          //IMPORTANT - To restore the canvas after rotation
+          x += barWidth * 1.5;
           ctx.restore();
       }
+      
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = '';
+      ctx.restore();
       break;
 
-      case '8': //Animation #8: Layer Interactions
+      case '8': //Animation #8: Layer Interactions (Psychedellic Blue)
       //Creates 32 soundbars
       for(let i = 0; i< bufferLength; i++) {
           barHeight = dataArray[i] * 1.1;
@@ -403,10 +444,13 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           x += barWidth;
           ctx.restore();
       }
+      
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
 
       case '9': //Animation #9: Liquid Filter Effect
-      ctx.fillStyle = 'yellow';
+      ctx.fillStyle = 'yellow'; //fetchRandomColor();   
       canvas.style.background = 'black';
       canvas.style.filter = 'blur(10px) contrast(20)';
 
@@ -433,6 +477,9 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           x += barWidth;
           ctx.restore();
       }
+      
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
 
       case '10': //Animation #10: Text effects on canvas with fillText
@@ -462,6 +509,9 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
       const halfSize = fontSize/2;
       ctx.fillText('A', canvas.width/2 - halfSize/2, canvas.height/2 + halfSize/2);
       ctx.strokeText('A', canvas.width/2 - halfSize/2, canvas.height/2 + halfSize/2);
+
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
       
       case '11': //Animation #11: Outward Spiral
@@ -476,6 +526,9 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           x += barWidth;
           ctx.restore();
       }
+
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
 
       case '12': //Animation #12: Conditional Rectangles (Pencil Shavings)
@@ -496,6 +549,9 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           x += barWidth;
           ctx.restore();
       }
+
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
 
       default: //Animation #1: Waves back-to-back
@@ -533,12 +589,18 @@ function drawVisualizer(choice, bufferLength, x, barWidth, barHeight, dataArray)
           //IMPORTANT - To restore the canvas after rotation
           ctx.restore();
       }
+
+      //IMPORTANT - To restore the canvas after rotation
+      ctx.restore();
       break;
   }
 }
 
 //pause music function
 function pauseMusic(){
+  isPlaying = false;
+  isPaused = true;
+
   wrapper.classList.remove("paused");
   playPauseBtn.querySelector("i").innerText = "play_arrow";
   mainAudio.pause();
