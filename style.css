@@ -20,10 +20,11 @@
   --black: #000000;
   --lightblue: #496E92;
   --darkblackblue: #191C22;
-  --darkgold: #8E793E;
-  --lightgold: #AD974F;
+  --golddust2: #E3D2C4;
+  --golddust1: #FDFCFB;
   --intellectualgrey: #231F20;
   --lightgrey: #EAEAEA;
+  --racoonblack: #434300;
 }
 body{
   display: flex;
@@ -40,7 +41,7 @@ body{
   overflow: hidden;
   position: relative;
   border-radius: 15px;
-  background: var(--white);
+  background: linear-gradient(90deg, var(--golddust1) 0%, var(--golddust2) 100%);
   box-shadow: 0px 6px 15px var(--lightbshadow);
 }
 .wrapper i{
@@ -109,7 +110,7 @@ body{
   width: 0%;
   position: relative;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--pink) 0%, var(--violet) 100%);
+  background: linear-gradient(90deg, var(--racoonblack) 0%, var(--black) 100%);
 }
 .progress-bar::before{
   content: "";
@@ -143,7 +144,7 @@ body{
 .controls, #player i{
   font-size: 28px;
   user-select: none;
-  background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
+  background: linear-gradient(var(--racoonblack) 0%, var(--black) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -167,7 +168,7 @@ body{
   justify-content: center;
   border-radius: 50%;
   background: linear-gradient(var(--white) 0%, var(--darkwhite) 100%);
-  box-shadow: 0px 0px 5px var(--pink);
+  box-shadow: 0px 0px 5px var(--lightblack);
 }
 .play-pause::before{
   position: absolute;
@@ -175,7 +176,7 @@ body{
   height: 43px;
   width: 43px;
   border-radius: inherit;
-  background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
+  background: linear-gradient(var(--racoonblack) 0%, var(--black) 100%);
 }
 .play-pause i{
   height: 43px;
@@ -349,6 +350,15 @@ ul li.playing{
 } */
 
 /* #endregion */
+
+#volume .volume-slider {
+  position: relative;
+  top: 1px;
+  width: 300px;
+  border-radius: 5px;
+  background: var(--intellectualgrey);
+  cursor: pointer;
+} 
 
 /* Responsive Design */
 @media only screen and (max-width:900px) {
