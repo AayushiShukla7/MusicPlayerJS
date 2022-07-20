@@ -139,7 +139,7 @@ body{
   color: var(--lightblack);
 }
 .controls, #player{
-  margin: 40px 0 5px 0;
+  margin: 10px 0 5px 0;
 }
 .controls, #player i{
   font-size: 28px;

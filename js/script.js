@@ -92,7 +92,7 @@ function setVolume(myVolume) {
   mainAudio.volume = myVolume;
 }
 
-volumeSlider.addEventListener("change", function(e) {
+volumeSlider.addEventListener("input", function(e) {
   output.innerHTML = e.currentTarget.value;
   mainAudio.volume = e.currentTarget.value / 100;
 });
