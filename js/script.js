@@ -11,7 +11,7 @@ progressBar = progressArea.querySelector(".progress-bar"),
 musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
 closemoreMusic = musicList.querySelector("#close"),
-volumeSlider = wrapper.querySelector("#volume");
+volumeSlider = wrapper.querySelector("#np-volume");
 //customSelect = wrapper.querySelector(".top-bar #show-animation-list");
 
 let isPaused = true;
@@ -84,20 +84,19 @@ window.addEventListener("load", ()=>{
 });
 
 //volume slider
-// volumeSlider.slider({
-//   min: 0,
-//   max: 100,
-//   value: 0,
-//   range: "min",
-//   slide: function(event, ui) {
-//     setVolume(ui.value / 100);
-//   }
-// });
+var output = document.getElementById("volume-value");
+output.innerHTML = volumeSlider.value;
 
-//volumn control
+//volume control - Slider
 function setVolume(myVolume) {
   mainAudio.volume = myVolume;
 }
+
+volumeSlider.addEventListener("change", function(e) {
+  output.innerHTML = e.currentTarget.value;
+  mainAudio.volume = e.currentTarget.value / 100;
+});
+
 
 // wrapper.getElementById('#np-volume').on('input propertychange', function() {
 //   var val = (this.val() - this.attr('min')) / (this.attr('max') - this.attr('min'));
@@ -200,7 +199,7 @@ function playMusic(){
   wrapper.classList.add("paused");
   playPauseBtn.querySelector("i").innerText = "pause";
   const audioContext = new window.AudioContext(); 
-  setVolume(myVolume);
+  //setVolume(myVolume);
   mainAudio.play();
 
   //Animations

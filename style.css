@@ -286,6 +286,40 @@ ul li.playing{
   margin-right: -400px;
   right: 0;
 }
+ 
+#volume .volume-progressbar {
+  position: absolute;
+  top: 16px;
+  left: 220px;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
+}*/
+
+/* #endregion */
+
+#player {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 0;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+#player i {
+  border-radius: 50%;
+  color: linear-gradient(var(--white) 0%, var(--darkwhite) 100%);
+  box-shadow: 0px 0px 5px var(--lightblack);
+}
+#player p {
+  min-width: 10px;
+  max-width: 10px;
+  display: flex;
+  position: relative;
+  margin-left: 10px;
+}
 
 #volume {
   height: 5px;
@@ -297,24 +331,16 @@ ul li.playing{
   cursor: pointer;
   align-items: center;
   justify-content: center;
-	background: #f0f0f0;
+  color: var(--racoonblack);
 	border-radius: 15px;
 } 
-#volume .volume-progressbar {
-  position: absolute;
-  top: 16px;
-  left: 220px;
-  width: 100%;
-  height: 5px;
-  border-radius: 5px;
-  background: linear-gradient(var(--pink) 0%, var(--violet) 100%);
-}
 #volume .volume-slider {
   position: relative;
   top: 1px;
   width: 100%;
-  border-radius: 5px;
-  background: var(--intellectualgrey);
+  height: 12px;
+  border-radius: 15px;
+  background: linear-gradient(var(--lightblack) 0%, var(--racoonblack) 100%);
   cursor: pointer;
   -webkit-appearance: none; 
 } 
@@ -329,6 +355,14 @@ ul li.playing{
   display: block;
 }
 
+#volume .volume-slider:focus {
+  outline: none;
+}
+
+#volume .volume-slider:active::-webkit-slider-thumb {
+  background: var(--intellectualgrey);
+}
+
 #volume .volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 24px;
@@ -336,29 +370,10 @@ ul li.playing{
   margin-top: -3px;
   border: none;
   border-radius: 50%;
-  background: #AAA;
-  color: linear-gradient(var(--pink) 0%, var(--violet) 100%);
+  background: var(--black);
+  color: linear-gradient(var(--lightblack) 0%, var(--racoonblack) 100%);
   display: none;
 }
-
-#volume .volume-slider:focus {
-  outline: none;
-}
-
-#volume .volume-slider:active::-webkit-slider-thumb {
-  background: var(--intellectualgrey);
-} */
-
-/* #endregion */
-
-#volume .volume-slider {
-  position: relative;
-  top: 1px;
-  width: 300px;
-  border-radius: 5px;
-  background: var(--intellectualgrey);
-  cursor: pointer;
-} 
 
 /* Responsive Design */
 @media only screen and (max-width:900px) {
