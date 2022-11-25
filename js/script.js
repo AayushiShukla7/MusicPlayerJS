@@ -15,8 +15,11 @@ volumeSlider = wrapper.querySelector("#np-volume"),
 animationDropdown = wrapper.querySelector("#animation-dropdown"),
 input = wrapper.querySelector("input[type=file]");
 
+//Custom song play
 input.onchange = function() {
   mainAudio.src = URL.createObjectURL(input.files[0]);
+  console.log(input.files[0]);
+  musicName.innerText = input.files[0].name.substr(0, input.files[0].name.indexOf(".mp3"));
   mainAudio.play();
 }
 
