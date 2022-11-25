@@ -12,7 +12,10 @@ musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
 closemoreMusic = musicList.querySelector("#close"),
 volumeSlider = wrapper.querySelector("#np-volume");
-//customSelect = wrapper.querySelector(".top-bar #show-animation-list");
+animationDropdown = wrapper.querySelector("#animation-dropdown");
+
+//Animation Dropdown Options
+const options = ["Sound Bars", "Circle with Bars", "Leaf with Arc", "Origami Fan", "Bubbles", "Spiraling Images", "Neon Bars", "Psychedellic Blue", "Groovy Liquid", "Alphabet Soup", "Outward Spiral", "Colorful Pencil Shavings"];
 
 let isPaused = true;
 let isPlaying = false;
@@ -230,6 +233,9 @@ function playMusic(){
       drawVisualizer(styleChoice, bufferLength, x, barWidth, barHeight, dataArray);  //Reusable method
       requestAnimationFrame(animate);
   }
+
+  console.log("styleChoice: " + styleChoice);
+  //animationDropdown.innerHTML = styleChoice > 5 ? "Sound Bars" : "Bubbles";
   animate();
 }
 
