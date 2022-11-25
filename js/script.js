@@ -11,11 +11,20 @@ progressBar = progressArea.querySelector(".progress-bar"),
 musicList = wrapper.querySelector(".music-list"),
 moreMusicBtn = wrapper.querySelector("#more-music"),
 closemoreMusic = musicList.querySelector("#close"),
-volumeSlider = wrapper.querySelector("#np-volume");
-animationDropdown = wrapper.querySelector("#animation-dropdown");
+volumeSlider = wrapper.querySelector("#np-volume"),
+animationDropdown = wrapper.querySelector("#animation-dropdown"),
+input = wrapper.querySelector("input[type=file]");
+
+input.onchange = function() {
+  mainAudio.src = URL.createObjectURL(input.files[0]);
+  mainAudio.play();
+}
 
 //Animation Dropdown Options
 const animationOptions = ["--Select Animation--", "Sound Bars", "Circle with Bars", "Leaf with Arc", "Origami Fan", "Bubbles", "Spiraling Images", "Neon Bars", "Psychedellic Blue", "Groovy Liquid", "Alphabet Soup", "Outward Spiral", "Colorful Pencil Shavings"];
+
+const fftSizeArray = [32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768];
+let randomFFTIndex = randomNumber(fftSizeArray.length) - 1;
 
 let isPaused = true;
 let isPlaying = false;
@@ -204,20 +213,17 @@ function playMusic(){
 
   wrapper.classList.add("paused");
   playPauseBtn.querySelector("i").innerText = "pause";
-  
-  //setVolume(myVolume);
 
   //Randomize animation style and update dropdown
-  styleChoice = randomNumber(11);
   console.log("Animation = " + animationOptions[styleChoice]);
   animationDropdown.value = styleChoice;
+  audioContext = new window.AudioContext(); 
 
   mainAudio.play();
 
   //Animations
-  audioContext = new window.AudioContext(); 
-
   if(!audioSource) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     audioSource = audioContext.createMediaElementSource(mainAudio);
     analyzer = audioContext.createAnalyser();
     audioSource.connect(analyzer);
@@ -226,9 +232,7 @@ function playMusic(){
 
   //Analyzer bars drawn on canvas (default is 2048)
   //Analyser fftSize Values: 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768
-  const fftSizeArray = [32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768];
-  let randomFFTIndex = randomNumber(fftSizeArray.length) - 1;
-  analyzer.fftSize = fftSizeArray[randomFFTIndex]; // 128; 
+  analyzer.fftSize = 128; // fftSizeArray[randomFFTIndex]; 
   console.log("analyzer.fftSize = "+ analyzer.fftSize);
 
   //ReadOnly (half of fftSize)
