@@ -15,7 +15,7 @@ volumeSlider = wrapper.querySelector("#np-volume");
 animationDropdown = wrapper.querySelector("#animation-dropdown");
 
 //Animation Dropdown Options
-const options = ["Sound Bars", "Circle with Bars", "Leaf with Arc", "Origami Fan", "Bubbles", "Spiraling Images", "Neon Bars", "Psychedellic Blue", "Groovy Liquid", "Alphabet Soup", "Outward Spiral", "Colorful Pencil Shavings"];
+const animationOptions = ["--Select Animation--", "Sound Bars", "Circle with Bars", "Leaf with Arc", "Origami Fan", "Bubbles", "Spiraling Images", "Neon Bars", "Psychedellic Blue", "Groovy Liquid", "Alphabet Soup", "Outward Spiral", "Colorful Pencil Shavings"];
 
 let isPaused = true;
 let isPlaying = false;
@@ -32,13 +32,23 @@ const ctx = canvas.getContext('2d');
 //Give lines round endings 
 ctx.lineCap = 'round';
 
-let audioSource;
+//let audioSource;
 let analyzer;
 
 const rndInt = randomNumber(12);
 let styleChoice = rndInt.toString();
 let analyzerFFTValue = 128; 
 let myVolume = 0.5; 
+
+let audioContext = new window.AudioContext();
+
+// //Dropdown options creation
+// const select = document.getElementById('animation-dropdown')
+// animationOptions.forEach(value => {
+//   const option = document.createElement('option');
+//   option.innerHTML = value;
+//   select.appendChild(option);
+// });
 
 //#endregion Animations - SETUP
 
@@ -100,19 +110,6 @@ volumeSlider.addEventListener("input", function(e) {
   mainAudio.volume = e.currentTarget.value / 100;
 });
 
-
-// wrapper.getElementById('#np-volume').on('input propertychange', function() {
-//   var val = (this.val() - this.attr('min')) / (this.attr('max') - this.attr('min'));
-
-//   wrapper.getElementById('#volume-progressbar').css('background',
-//     '-webkit-gradient(linear, left top, right top, '
-//     + 'color-stop(' + 0 + ', #D57D67), '
-//     + 'color-stop(' + val + ', #EDB472), '
-//     + 'color-stop(' + val + ', #CCC)'
-//     + ')'
-//   );
-// });
-
 //volume up/down with arrow keys function
 document.onkeydown = function(event) {
   switch (parseInt(event.key)) {
@@ -143,6 +140,8 @@ document.onkeydown = function(event) {
   }
 };
 
+//#region  Helper Functions
+
 //random number calculation function
 function randomNumber(maxVal) {
   return Math.floor(Math.random() * maxVal) + 1;
@@ -157,6 +156,8 @@ function fetchRandomColor() {
   let randColor = randomNumber.padStart(6, 0);   
   return `#${randColor.toUpperCase()}`
 }
+
+//#endregion  Helper Functions
 
 //Music pause/play toggle on canvas click event
 canvas.addEventListener('click', function(){ 
@@ -196,24 +197,36 @@ function setBarWidthAndFFT(barWidth, fft) {
 
 //play music function
 function playMusic(){
+  //Reset canvas for redraw
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   isPlaying = true;
   isPaused = false;
 
   wrapper.classList.add("paused");
   playPauseBtn.querySelector("i").innerText = "pause";
-  const audioContext = new window.AudioContext(); 
+  audioContext = new window.AudioContext(); 
   //setVolume(myVolume);
+
+  //Randomize animation style and update dropdown
+  styleChoice = randomNumber(11);
+  console.log("Animation = " + animationOptions[styleChoice]);
+  animationDropdown.value = styleChoice;
+
   mainAudio.play();
 
   //Animations
-  audioSource = audioContext.createMediaElementSource(mainAudio);
+  let audioSource = audioContext.createMediaElementSource(mainAudio);
   analyzer = audioContext.createAnalyser();
   audioSource.connect(analyzer);
   analyzer.connect(audioContext.destination);
 
   //Analyzer bars drawn on canvas (default is 2048)
   //Analyser fftSize Values: 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768
-  analyzer.fftSize = 128; 
+  const fftSizeArray = [32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768];
+  let randomFFTIndex = randomNumber(fftSizeArray.length) - 1;
+  analyzer.fftSize = fftSizeArray[randomFFTIndex]; // 128; 
+  console.log("analyzer.fftSize = "+ analyzer.fftSize);
 
   //ReadOnly (half of fftSize)
   const bufferLength = analyzer.frequencyBinCount;    
@@ -234,8 +247,6 @@ function playMusic(){
       requestAnimationFrame(animate);
   }
 
-  console.log("styleChoice: " + styleChoice);
-  //animationDropdown.innerHTML = styleChoice > 5 ? "Sound Bars" : "Bubbles";
   animate();
 }
 
