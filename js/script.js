@@ -20,6 +20,10 @@ const animationOptions = ["--Select Animation--", "Sound Bars", "Circle with Bar
 let isPaused = true;
 let isPlaying = false;
 
+let audioContext;
+let audioSource;
+let analyzer;
+
 //#region Animations - SETUP
 
 //Set canvas width and height
@@ -32,15 +36,10 @@ const ctx = canvas.getContext('2d');
 //Give lines round endings 
 ctx.lineCap = 'round';
 
-//let audioSource;
-let analyzer;
-
 const rndInt = randomNumber(12);
 let styleChoice = rndInt.toString();
 let analyzerFFTValue = 128; 
 let myVolume = 0.5; 
-
-let audioContext = new window.AudioContext();
 
 // //Dropdown options creation
 // const select = document.getElementById('animation-dropdown')
@@ -205,7 +204,7 @@ function playMusic(){
 
   wrapper.classList.add("paused");
   playPauseBtn.querySelector("i").innerText = "pause";
-  audioContext = new window.AudioContext(); 
+  
   //setVolume(myVolume);
 
   //Randomize animation style and update dropdown
@@ -216,10 +215,14 @@ function playMusic(){
   mainAudio.play();
 
   //Animations
-  let audioSource = audioContext.createMediaElementSource(mainAudio);
-  analyzer = audioContext.createAnalyser();
-  audioSource.connect(analyzer);
-  analyzer.connect(audioContext.destination);
+  audioContext = new window.AudioContext(); 
+
+  if(!audioSource) {
+    audioSource = audioContext.createMediaElementSource(mainAudio);
+    analyzer = audioContext.createAnalyser();
+    audioSource.connect(analyzer);
+    analyzer.connect(audioContext.destination);
+  }
 
   //Analyzer bars drawn on canvas (default is 2048)
   //Analyser fftSize Values: 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768
